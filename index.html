@@ -1,0 +1,87 @@
+<!DOCTYPE html> <!-- NOTE! dont use inline comments like me, also this must be in templates directory --> 
+<html>
+<head>
+        <meta charset="UTF-8">
+        <title>Soil Moisture <3</title> <!-- establishes website table -->
+        <meta http-equiv="refresh" content="180"> <!-- tells browser to automatically fresh every 3mins -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- brings in the java library thats needed to render a chart csv style -->
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet"> <!-- quicksand font lol -->
+<!-- css styling -->
+        <style>
+                body {
+                        background-color: #f5c9da; <!-- light pink -->
+                        font-family: 'Quicksand', sans-serif; <!-- quicksand font-->
+                        color: #3a674f; <!-- green text-->
+                        text-align: center;
+                        padding: 40px;
+                }
+                h2 { <!-- title is h2 -->
+                        color: #e676a4;
+                        font-size: 2.2em;
+                        margin-bottom: 30px;
+                }
+                canvas { <!-- graph area-->
+                        background-color: #faeee6; <!-- cream background, green border, round edges -->
+                        border: 2px solid #cdeac0;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+                }
+        </style>
+
+</head>
+<body>
+        <h2>Soil Moisture n Time</h2>
+        <canvas id="PiplantChart" width="800" height="400"></canvas>
+        <script> <!-- establishes graph labels and parameters/colors-->
+                const labels = {{ labels|tojson }};
+                const data = { <!-- python becomes javascript array through |tojson which is able to be visualized -->
+                        labels: labels,
+                        datasets: [{
+                                label: 'Soil Moisture',
+                                data: {{ data|tojson }},
+                                borderColor: '#7bb574',
+                                backgroundColor: '#f5c9da',
+                                fill: true,
+                                tension: 0.1,
+                                pointRadius: 4,
+                                pointBackgroundColor: '#3a674f'
+                        }]
+                }; <!--flask template variable that ends up becoming the timestamps from data readings -->
+
+ const config = {
+                        type: 'line',
+                        data: data, <!-- creates line chart w/ axis labels that are pink -->
+                        options: {
+                                scales: {
+                                        y: {
+                                                beginAtZero: true,
+                                                title: {
+                                                        display: true,
+                                                        text: 'Moisture!',
+                                                        color: '#78354e'
+                                                }
+                                        },
+                                        x: {
+                                                title: {
+                                                        display: true,
+                                                        text: 'Time!',
+                                                        color: '#78354e'
+                                                }
+                                        }
+                                },
+                                plugins: {
+                                        legend: {
+                                                labels: {
+                                                        color: '#78354e'
+                                                }
+                                        }
+                                }
+                        }
+                };
+                const PiplantChart = new Chart( <!--is able to put the chart on the canvas using the piplantchart id -->
+                        document.getElementById('PiplantChart'),
+                        config
+                );
+        </script>
+</body>
+</html>
